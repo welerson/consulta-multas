@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Helvetica Neue", Arial, sans-serif;
+  
+  --color-brand-dark: #1E3A8A;
+  --color-brand-primary: #3B82F6;
+  --color-bg-geometric: #F0F4F8;
+  --color-text-dark: #1F2937;
+  --color-text-muted: #6B7280;
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased text-text-dark bg-bg-geometric;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full hover:bg-slate-400 transition-colors;
+}
+
+/* AdSense placeholder style */
+.adsense-placeholder {
+  @apply bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm font-medium transition-all;
+  min-height: 100px;
+}

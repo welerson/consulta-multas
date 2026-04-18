@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. DEFAULT DENY
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. GLOBALS & HELPERS
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() { 
+      return isSignedIn() && (
+        request.auth.token.email == 'welersonfaril@gmail.com' ||
+        request.auth.token.email_verified == true && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    // 3. STATS RULES (Publicly readable and updatable for counting)
+    match /stats/{statId} {
+      allow read: if true;
+      
+      function isValidStat(data) {
+        return data.visits is int && data.searches is int && 
+               data.adClicks is int && data.adImpressions is int;
+      }
+
+      allow create: if isValidStat(incoming());
+      allow update: if isValidStat(incoming());
+    }
+
+    // 4. ADS RULES (Public read, Admin only write)
+    match /ads/{adId} {
+      allow read: if true;
+
+      function isValidAd(data) {
+        return data.imageUrl is string && data.imageUrl.size() <= 1048576 && // 1MB limit check
+               data.targetUrl is string && data.targetUrl.size() <= 2048 &&
+               data.label is string && data.label.size() <= 100 &&
+               data.active is bool && data.position in ['sidebar', 'result_list'] &&
+               (!('expiresAt' in data) || data.expiresAt == null || data.expiresAt is string);
+      }
+
+      allow create: if isAdmin() && isValidAd(incoming());
+      allow update: if isAdmin() && isValidAd(incoming());
+      allow delete: if isAdmin();
+    }
+  }
+}

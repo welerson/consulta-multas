@@ -1,0 +1,35 @@
+{
+  "entities": {
+    "Stat": {
+      "title": "Estatísticas Globais",
+      "description": "Contadores de acesso, pesquisas e cliques em anúncios.",
+      "type": "object",
+      "properties": {
+        "visits": { "type": "number", "description": "Total de visitas ao site" },
+        "searches": { "type": "number", "description": "Total de pesquisas de infrações" },
+        "adClicks": { "type": "number", "description": "Total de cliques em banners customizados" },
+        "adImpressions": { "type": "number", "description": "Total de visualizações de banners" }
+      },
+      "required": ["visits", "searches", "adClicks", "adImpressions"]
+    },
+    "Ad": {
+      "title": "Anúncio Customizado",
+      "description": "Banner publicitário gerenciado pelo admin.",
+      "type": "object",
+      "properties": {
+        "imageUrl": { "type": "string", "description": "URL ou Base64 da imagem" },
+        "targetUrl": { "type": "string", "description": "URL de destino do clique" },
+        "label": { "type": "string", "description": "Nome do anunciante" },
+        "active": { "type": "boolean", "description": "Status de exibição" },
+        "position": { "type": "string", "enum": ["sidebar", "result_list"], "description": "Local onde o anúncio aparece" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time", "description": "Data que o anúncio deve sair do ar" }
+      },
+      "required": ["imageUrl", "targetUrl", "label", "active", "position"]
+    }
+  },
+  "firestore": {
+    "/stats/global": { "schema": "Stat", "description": "Sede das métricas de performance do site" },
+    "/ads/{adId}": { "schema": "Ad", "description": "Coleção de banners publicitários" }
+  }
+}

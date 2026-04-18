@@ -1,0 +1,6 @@
+{
+  "name": "Consulta de Multas BR",
+  "description": "Portal de consulta informativa de infrações de trânsito brasileira com base nos códigos do CTB.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
